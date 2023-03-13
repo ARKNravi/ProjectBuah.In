@@ -61,8 +61,9 @@ func main() {
 	cartRoutes := apiRoutes.Group("/cart", middleware.AuthorizeJWT())
 	{
 		cartRoutes.GET("/", cartHandler.GetAllCart)
-		cartRoutes.GET("/:cart/product/:product", cartHandler.AddCart)
-
+		cartRoutes.POST("/:cart/product/:product", cartHandler.AddCart)
+		cartRoutes.PUT("/:cart/product/:product", cartHandler.UpdateCart)
+		cartRoutes.DELETE("/:cart/product/:product", cartHandler.DeleteCart)
 	}
 	r.Run(":8090")
 
