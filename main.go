@@ -27,6 +27,7 @@ func main() {
 	userHandler := handler.NewUserHandler()
 	buahHandler := handler.NewBuahHandler()
 	cartHandler := handler.NewCartHandler()
+	orderHandler := handler.NewOrderHandler()
 
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Welcome to Our Mini Ecommerce")
@@ -52,18 +53,22 @@ func main() {
 	productRoutes := apiRoutes.Group("/buahs", middleware.AuthorizeJWT())
 	{
 		productRoutes.GET("/", buahHandler.GetAllBuah)
-		productRoutes.GET("/:product", buahHandler.GetBuah)
+		productRoutes.GET("/:buah", buahHandler.GetBuah)
 		productRoutes.POST("/", buahHandler.AddBuah)
-		productRoutes.PUT("/:product", buahHandler.UpdateBuah)
-		productRoutes.DELETE("/:product", buahHandler.DeleteBuah)
+		productRoutes.PUT("/:buah", buahHandler.UpdateBuah)
+		productRoutes.DELETE("/:buah", buahHandler.DeleteBuah)
 	}
 
 	cartRoutes := apiRoutes.Group("/cart", middleware.AuthorizeJWT())
 	{
 		cartRoutes.GET("/", cartHandler.GetAllCart)
-		cartRoutes.POST("/:cart/product/:product", cartHandler.AddCart)
-		cartRoutes.PUT("/:cart/product/:product", cartHandler.UpdateCart)
-		cartRoutes.DELETE("/:cart/product/:product", cartHandler.DeleteCart)
+		cartRoutes.POST("/buah/:buah", cartHandler.AddCart)
+		cartRoutes.PUT("/buah/:buah", cartHandler.UpdateCart)
+		cartRoutes.DELETE("/buah/:buah", cartHandler.DeleteCart)
+	}
+	orderRoutes := apiRoutes.Group("/order", middleware.AuthorizeJWT())
+	{
+		orderRoutes.POST("/buah/:buah/quantity/:quantity", orderHandler.OrderProduct)
 	}
 	r.Run(":8090")
 

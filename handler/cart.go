@@ -86,28 +86,21 @@ func (h *cartHandler) UpdateCart(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	cartStr := ctx.Param("cart")
-	cartID, err := strconv.Atoi(cartStr)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	buahIDStr := ctx.Param("buah")
+	if buahID, err := strconv.Atoi(buahIDStr); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 	} else {
-		buahIDStr := ctx.Param("buah")
-		if buahID, err := strconv.Atoi(buahIDStr); err != nil {
+		userID := ctx.GetFloat64("userID")
+		if err := h.repo.UpdateCart(int(userID), buahID, cart); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 		} else {
-			userID := ctx.GetFloat64("userID")
-			if err := h.repo.UpdateCart(int(userID), buahID, cartID, cart); err != nil {
-				ctx.JSON(http.StatusBadRequest, gin.H{
-					"error": err.Error(),
-				})
-			} else {
-				ctx.String(http.StatusOK, "Product Successfully Updated")
-			}
-			ctx.JSON(http.StatusOK, cart)
+			ctx.String(http.StatusOK, "Product Successfully Updated")
 		}
+		ctx.JSON(http.StatusOK, cart)
 	}
 }
 
@@ -117,28 +110,20 @@ func (h *cartHandler) DeleteCart(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	cartStr := ctx.Param("cart")
-	cartID, err := strconv.Atoi(cartStr)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	buahIDStr := ctx.Param("buah")
+	if buahID, err := strconv.Atoi(buahIDStr); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
 	} else {
-		buahIDStr := ctx.Param("buah")
-		if buahID, err := strconv.Atoi(buahIDStr); err != nil {
+		userID := ctx.GetFloat64("userID")
+		if err := h.repo.DeleteCart(int(userID), buahID, cart); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 		} else {
-			userID := ctx.GetFloat64("userID")
-			if err := h.repo.DeleteCart(int(userID), buahID, cartID, cart); err != nil {
-				ctx.JSON(http.StatusBadRequest, gin.H{
-					"error": err.Error(),
-				})
-			} else {
-				ctx.String(http.StatusOK, "Product Successfully Deleted")
-			}
-			ctx.JSON(http.StatusOK, cart)
+			ctx.String(http.StatusOK, "Product Successfully Deleted")
 		}
+		ctx.JSON(http.StatusOK, cart)
 	}
-
 }

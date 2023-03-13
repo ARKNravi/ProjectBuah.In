@@ -37,10 +37,10 @@ func (db *buahRepository) AddBuah(Buah models.Buah) (models.Buah, error) {
 }
 
 func (db *buahRepository) UpdateBuah(Buah models.Buah) (models.Buah, error) {
-	if err := db.connection.First(&Buah, Buah.ID).Error; err != nil {
+	if err := db.connection.Find(&Buah, Buah.ID).Error; err != nil {
 		return Buah, err
 	}
-	return Buah, db.connection.Model(&Buah).Updates(&Buah).Error
+	return Buah, db.connection.Save(&Buah).Error
 }
 
 func (db *buahRepository) DeleteBuah(Buah models.Buah) (models.Buah, error) {

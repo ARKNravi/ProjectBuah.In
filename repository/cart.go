@@ -11,8 +11,8 @@ type CartRepository interface {
 	GetCart(int) (models.Cart, error)
 	GetAllCart() ([]models.Cart, error)
 	AddCart(int, int) error
-	UpdateCart(int, int, int, models.Cart) error
-	DeleteCart(int, int, int, models.Cart) error
+	UpdateCart(int, int, models.Cart) error
+	DeleteCart(int, int, models.Cart) error
 }
 
 type cartRepository struct {
@@ -41,7 +41,7 @@ func (db *cartRepository) AddCart(userID int, productID int) error {
 	}).Error
 }
 
-func (db *cartRepository) UpdateCart(userID int, productID int, id int, cart models.Cart) error {
+func (db *cartRepository) UpdateCart(userID int, productID int, cart models.Cart) error {
 	if err := db.connection.First(&cart, cart.ID).Error; err != nil {
 		return err
 	}
@@ -51,7 +51,7 @@ func (db *cartRepository) UpdateCart(userID int, productID int, id int, cart mod
 	}).Error
 }
 
-func (db *cartRepository) DeleteCart(userID int, productID int, id int, cart models.Cart) error {
+func (db *cartRepository) DeleteCart(userID int, productID int, cart models.Cart) error {
 	if err := db.connection.First(&cart, cart.ID).Error; err != nil {
 		return err
 	}
