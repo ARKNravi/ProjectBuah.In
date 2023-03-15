@@ -3,6 +3,7 @@ package repository
 import (
 	"ProjectBuahIn/models"
 	"log"
+	"os"
 
 	"gorm.io/gorm"
 
@@ -11,7 +12,7 @@ import (
 
 func DB() *gorm.DB {
 
-	dsn := "root:@tcp(127.0.0.1:3306)/projectbcc5?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := os.Getenv("DB")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Db Error")

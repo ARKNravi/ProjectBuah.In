@@ -10,9 +10,9 @@ import (
 type CartRepository interface {
 	GetCart(int) (models.Cart, error)
 	GetAllCart() ([]models.Cart, error)
-	AddCart(int, int) error
-	UpdateCart(int, int, models.Cart) error
-	DeleteCart(int, int, models.Cart) error
+	AddCart(int, int, int) error
+	UpdateCart(int, int, int, models.Cart) error
+	DeleteCart(models.Cart) (models.Cart, error)
 }
 
 type cartRepository struct {
@@ -34,14 +34,15 @@ func (db *cartRepository) GetAllCart() (carts []models.Cart, err error) {
 	return carts, db.connection.Find(&carts).Error
 }
 
-func (db *cartRepository) AddCart(userID int, productID int) error {
+func (db *cartRepository) AddCart(userID int, productID int, quantity int) error {
 	return db.connection.Create(&models.Cart{
 		ProductID: uint(productID),
 		UserID:    uint(userID),
+		Quantity:  uint(quantity),
 	}).Error
 }
 
-func (db *cartRepository) UpdateCart(userID int, productID int, cart models.Cart) error {
+func (db *cartRepository) UpdateCart(userID int, productID int, id int, cart models.Cart) error {
 	if err := db.connection.First(&cart, cart.ID).Error; err != nil {
 		return err
 	}
@@ -51,12 +52,9 @@ func (db *cartRepository) UpdateCart(userID int, productID int, cart models.Cart
 	}).Error
 }
 
-func (db *cartRepository) DeleteCart(userID int, productID int, cart models.Cart) error {
+func (db *cartRepository) DeleteCart(cart models.Cart) (models.Cart, error) {
 	if err := db.connection.First(&cart, cart.ID).Error; err != nil {
-		return err
+		return cart, err
 	}
-	return db.connection.Delete(&models.Cart{
-		ProductID: uint(productID),
-		UserID:    uint(userID),
-	}).Error
+	return cart, db.connection.Delete(&cart).Error
 }

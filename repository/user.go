@@ -48,7 +48,7 @@ func (db *userRepository) UpdateUser(user models.User) (models.User, error) {
 	if err := db.connection.First(&user, user.ID).Error; err != nil {
 		return user, err
 	}
-	return user, db.connection.Model(&user).Save(&user).Error
+	return user, db.connection.Model(&user).Updates(&user).Error
 }
 
 func (db *userRepository) DeleteUser(user models.User) (models.User, error) {
