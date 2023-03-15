@@ -7,11 +7,11 @@ import (
 type Cart struct {
 	gorm.Model
 	User       User `gorm:"foreignkey:UserID"`
-	Product    Buah `gorm:"foreignkey:ProductID"`
+	Buah       Buah `gorm:"foreignkey:BuahID"`
 	UserID     uint
-	ProductID  uint
+	BuahID     uint
 	Quantity   uint `json:"quantity"`
-	TotalPrice uint `json:"totalprice"`
+	Totalprice uint `json:"totalprice"`
 }
 
 func (Cart) TableName() string {

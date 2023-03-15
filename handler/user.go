@@ -79,7 +79,7 @@ func (h *userHandler) SignInUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	dbUser, err := h.repo.GetByEmail(user.Email)
+	dbUser, err := h.repo.GetByUsername(user.Username)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"msg": "No Such User Found"})
 		return

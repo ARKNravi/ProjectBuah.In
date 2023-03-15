@@ -1,18 +1,13 @@
 package main
 
 import (
-	//"ProjectBuahIn/controllers"
 	"ProjectBuahIn/handler"
 	"ProjectBuahIn/initializer"
 	"ProjectBuahIn/middleware"
 
-	//"ProjectBuahIn/repository"
-	//"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	//"gorm.io/driver/mysql"
-	//"gorm.io/gorm"
 )
 
 func init() {
@@ -28,6 +23,7 @@ func main() {
 	buahHandler := handler.NewBuahHandler()
 	cartHandler := handler.NewCartHandler()
 	orderHandler := handler.NewOrderHandler()
+	addressHandler := handler.NewAddressHandler()
 
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Welcome to Our Mini Ecommerce")
@@ -45,9 +41,18 @@ func main() {
 	{
 		userProtectedRoutes.GET("/", userHandler.GetAllUser)
 		userProtectedRoutes.GET("/:user", userHandler.GetUser)
-		userProtectedRoutes.GET("/:user/products", userHandler.GetProductOrdered)
+		userProtectedRoutes.GET("/:user/buah/:buah/products", userHandler.GetProductOrdered)
 		userProtectedRoutes.PUT("/:user", userHandler.UpdateUser)
 		userProtectedRoutes.DELETE("/:user", userHandler.DeleteUser)
+	}
+
+	addressRoutes := apiRoutes.Group("/address", middleware.AuthorizeJWT())
+	{
+		addressRoutes.GET("/", addressHandler.GetAllAddress)
+		addressRoutes.GET("/:address", addressHandler.GetAddress)
+		addressRoutes.POST("/", addressHandler.AddAddress)
+		addressRoutes.PUT("/:address", addressHandler.UpdateAddress)
+		addressRoutes.DELETE("/:address", addressHandler.DeleteAddress)
 	}
 
 	productRoutes := apiRoutes.Group("/buahs", middleware.AuthorizeJWT())
@@ -70,6 +75,13 @@ func main() {
 	{
 		orderRoutes.POST("/buah/:buah/quantity/:quantity", orderHandler.OrderProduct)
 	}
-	r.Run(":8070")
+
+	fileRoutes := r.Group("/file")
+	{
+		fileRoutes.POST("/single", handler.SingleFile)
+		fileRoutes.POST("/multi", handler.MultipleFile)
+	}
+
+	r.Run(":8090")
 
 }

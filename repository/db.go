@@ -18,7 +18,7 @@ func DB() *gorm.DB {
 		log.Fatal("Db Error")
 	}
 
-	db.AutoMigrate(&models.User{}, &models.Buah{}, &models.Order{}, &models.Cart{})
+	db.AutoMigrate(&models.User{}, &models.Buah{}, &models.Order{}, &models.Cart{}, &models.Address{})
 	return db
 
 }

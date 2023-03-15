@@ -10,7 +10,7 @@ import (
 type UserRepository interface {
 	AddUser(models.User) (models.User, error)
 	GetUser(int) (models.User, error)
-	GetByEmail(string) (models.User, error)
+	GetByUsername(string) (models.User, error)
 	GetAllUser() ([]models.User, error)
 	UpdateUser(models.User) (models.User, error)
 	DeleteUser(models.User) (models.User, error)
@@ -32,8 +32,8 @@ func (db *userRepository) GetUser(id int) (user models.User, err error) {
 	return user, db.connection.First(&user, id).Error
 }
 
-func (db *userRepository) GetByEmail(email string) (user models.User, err error) {
-	return user, db.connection.First(&user, "email=?", email).Error
+func (db *userRepository) GetByUsername(username string) (user models.User, err error) {
+	return user, db.connection.First(&user, "username=?", username).Error
 }
 
 func (db *userRepository) GetAllUser() (users []models.User, err error) {

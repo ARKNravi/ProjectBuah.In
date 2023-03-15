@@ -34,21 +34,21 @@ func (db *cartRepository) GetAllCart() (carts []models.Cart, err error) {
 	return carts, db.connection.Find(&carts).Error
 }
 
-func (db *cartRepository) AddCart(userID int, productID int, quantity int) error {
+func (db *cartRepository) AddCart(userID int, buahID int, quantity int) error {
 	return db.connection.Create(&models.Cart{
-		ProductID: uint(productID),
-		UserID:    uint(userID),
-		Quantity:  uint(quantity),
+		BuahID:   uint(buahID),
+		UserID:   uint(userID),
+		Quantity: uint(quantity),
 	}).Error
 }
 
-func (db *cartRepository) UpdateCart(userID int, productID int, id int, cart models.Cart) error {
+func (db *cartRepository) UpdateCart(userID int, buahID int, id int, cart models.Cart) error {
 	if err := db.connection.First(&cart, cart.ID).Error; err != nil {
 		return err
 	}
 	return db.connection.Create(&models.Cart{
-		ProductID: uint(productID),
-		UserID:    uint(userID),
+		BuahID: uint(buahID),
+		UserID: uint(userID),
 	}).Error
 }
 

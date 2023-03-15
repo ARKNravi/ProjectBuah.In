@@ -6,11 +6,12 @@ import (
 
 type Order struct {
 	gorm.Model
-	User      User `gorm:"foreignkey:UserID"`
-	Product   Buah `gorm:"foreignkey:ProductID"`
-	UserID    uint
-	ProductID uint
-	Quantity  int `json:"quantity"`
+	User     User `gorm:"foreignkey:UserID"`
+	Buah     Buah `gorm:"foreignkey:BuahID"`
+	UserID   uint
+	BuahID   uint
+	Quantity int  `json:"quantity"`
+	Status   bool `json:"status"`
 }
 
 func (Order) TableName() string {
