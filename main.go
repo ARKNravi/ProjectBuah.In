@@ -4,6 +4,7 @@ import (
 	"ProjectBuahIn/handler"
 	"ProjectBuahIn/initializer"
 	"ProjectBuahIn/middleware"
+	"os"
 
 	"net/http"
 
@@ -82,6 +83,7 @@ func main() {
 		fileRoutes.POST("/multi", handler.MultipleFile)
 	}
 
-	r.Run(":8090")
+	port := os.Getenv("PORT")
+	r.Run(":" + port)
 
 }
