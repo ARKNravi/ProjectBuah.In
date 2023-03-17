@@ -69,11 +69,13 @@ func main() {
 		productRoutes.PUT("/:buah", buahHandler.UpdateBuah)
 		productRoutes.DELETE("/:buah", buahHandler.DeleteBuah)
 	}
-	AnonproductRoutes := apiRoutes.Group("/buah")
+	AnonproductRoutes := apiRoutes.Group("/anonbuah")
 	{
 		AnonproductRoutes.GET("/", buahHandler.GetAllBuah)
 		AnonproductRoutes.GET("/:buah", buahHandler.GetBuah)
 		AnonproductRoutes.GET("kondisi/:kondisi", buahHandler.GetBuahByKondisi)
+		AnonproductRoutes.GET("/pricedesc", buahHandler.GetBuahByPriceDescending)
+		AnonproductRoutes.GET("/priceasc", buahHandler.GetBuahByPriceAscending)
 	}
 
 	cartRoutes := apiRoutes.Group("/cart", middleware.AuthorizeJWT())

@@ -35,6 +35,7 @@ func (db *addressRepository) GetAllAddress(userID int) (addresss []models.Addres
 }
 
 func (db *addressRepository) AddAddress(address models.Address, userID int) (models.Address, error) {
+
 	var user models.User
 	if err := db.connection.First(&user, userID).Error; err != nil {
 		return models.Address{}, err

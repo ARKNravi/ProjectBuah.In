@@ -65,12 +65,12 @@ func (h *addressHandler) AddAddress(ctx *gin.Context) {
 	}
 
 	userID := ctx.GetFloat64("userID")
-	if address, err := h.repo.AddAddress(address, int(userID)); err != nil {
+	if _, err := h.repo.AddAddress(address, int(userID)); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 	} else {
-		ctx.JSON(http.StatusOK, address)
+		ctx.JSON(http.StatusOK, "Address added successfully")
 	}
 }
 

@@ -13,7 +13,7 @@ import (
 type CartRepository interface {
 	GetCart(int) (models.Cart, error)
 	GetAllCart(int) ([]models.Cart, error)
-	AddCart(int, int, int) (models.Cart, error)
+	AddCart(int, int, int) error
 	UpdateCart(models.Cart) (models.Cart, error)
 	DeleteCart(models.Cart) (models.Cart, error)
 }
@@ -33,24 +33,24 @@ func (db *cartRepository) GetCart(id int) (cart models.Cart, err error) {
 	return cart, db.connection.Preload(clause.Associations).First(&cart, id).Error
 }
 
-func (db *cartRepository) AddCart(userID int, buahID int, quantity int) (cart models.Cart, err error) {
+func (db *cartRepository) AddCart(userID int, buahID int, quantity int) error {
 	var buah models.Buah
 	if err := db.connection.First(&buah, buahID).Error; err != nil {
-		return cart, err
+		return err
 	}
 
 	if int(buah.Stok) < quantity {
-		return cart, fmt.Errorf("Not enough stock for %s. Available stock: %d", buah.Nama, buah.Stok)
+		return fmt.Errorf("Not enough stock for %s. Available stock: %d", buah.Nama, buah.Stok)
 	}
 
 	totalPrice := uint(quantity) * buah.Price
 
 	buah.Stok = buah.Stok - uint(quantity)
 	if err := db.connection.Save(&buah).Error; err != nil {
-		return cart, err
+		return err
 	}
 
-	return cart, db.connection.Preload(clause.Associations).Create(&models.Cart{
+	return db.connection.Preload(clause.Associations).Create(&models.Cart{
 		BuahID:     uint(buahID),
 		UserID:     uint(userID),
 		Quantity:   uint(quantity),
