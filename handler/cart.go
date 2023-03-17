@@ -82,7 +82,6 @@ func (h *cartHandler) AddCart(ctx *gin.Context) {
 			}
 		}
 	}
-
 }
 
 func (h *cartHandler) UpdateCart(ctx *gin.Context) {

@@ -17,12 +17,10 @@ func ConnectToDb() {
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		panic("Failed to connect to DB 2345")
+		panic("Failed to connect to DB")
 	}
-	DB.AutoMigrate(&models.User{})
-	DB.AutoMigrate(&models.Order{})
-	DB.AutoMigrate(&models.Buah{})
-	DB.AutoMigrate(&models.Cart{})
-	DB.AutoMigrate(&models.Order{})
-
+	err = DB.AutoMigrate(&models.User{}, &models.Order{}, &models.Buah{}, &models.Cart{}, &models.Order{}, &models.Checkout{})
+	if err != nil {
+		panic("Failed to Migrate DB")
+	}
 }

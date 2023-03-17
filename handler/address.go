@@ -64,14 +64,14 @@ func (h *addressHandler) AddAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	address, err := h.repo.AddAddress(address)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-
+	userID := ctx.GetFloat64("userID")
+	if address, err := h.repo.AddAddress(address, int(userID)); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, address)
 	}
-	ctx.JSON(http.StatusOK, address)
-
 }
 
 func (h *addressHandler) UpdateAddress(ctx *gin.Context) {

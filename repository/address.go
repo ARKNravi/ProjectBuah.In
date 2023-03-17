@@ -5,12 +5,13 @@ import (
 	"ProjectBuahIn/models"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type AddressRepository interface {
 	GetAddress(int) (models.Address, error)
 	GetAllAddress() ([]models.Address, error)
-	AddAddress(models.Address) (models.Address, error)
+	AddAddress(models.Address, int) (models.Address, error)
 	UpdateAddress(models.Address) (models.Address, error)
 	DeleteAddress(models.Address) (models.Address, error)
 }
@@ -33,8 +34,22 @@ func (db *addressRepository) GetAllAddress() (addresss []models.Address, err err
 	return addresss, db.connection.Find(&addresss).Error
 }
 
-func (db *addressRepository) AddAddress(address models.Address) (models.Address, error) {
-	return address, db.connection.Create(&address).Error
+func (db *addressRepository) AddAddress(address models.Address, userID int) (models.Address, error) {
+	// Check if user with userID exists
+	var user models.User
+	if err := db.connection.First(&user, userID).Error; err != nil {
+		return models.Address{}, err
+	}
+
+	// Set the user ID for the address
+	address.UserID = uint(userID)
+
+	// Save the address to the database
+	if err := db.connection.Preload(clause.Associations).Where("user_id = ?", userID).Create(&address).Error; err != nil {
+		return models.Address{}, err
+	}
+
+	return address, nil
 }
 
 func (db *addressRepository) UpdateAddress(address models.Address) (models.Address, error) {

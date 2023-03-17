@@ -9,7 +9,7 @@ import (
 
 type CheckoutRepository interface {
 	GetCheckout(int) (models.Checkout, error)
-	AddCheckout(int, int, int) error
+	AddCheckout(int, int, int) (models.Checkout, error)
 }
 
 type checkoutRepository struct {
@@ -27,11 +27,10 @@ func (db *checkoutRepository) GetCheckout(id int) (checkout models.Checkout, err
 	return checkout, db.connection.Preload(clause.Associations).First(&checkout, id).Error
 }
 
-func (db *checkoutRepository) AddCheckout(userID int, addressID int, cartID int) error {
-	return db.connection.Create(&models.Checkout{
+func (db *checkoutRepository) AddCheckout(userID int, addressID int, cartID int) (checkout models.Checkout, err error) {
+	return checkout, db.connection.Preload(clause.Associations).Create(&models.Checkout{
 		UserID:    uint(userID),
 		AddressID: uint(addressID),
 		CartID:    uint(cartID),
 	}).Error
-
 }

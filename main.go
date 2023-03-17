@@ -26,6 +26,7 @@ func main() {
 	cartHandler := handler.NewCartHandler()
 	orderHandler := handler.NewOrderHandler()
 	addressHandler := handler.NewAddressHandler()
+	checkoutHandler := handler.NewCheckoutHandler()
 
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Welcome to Our Mini Ecommerce")
@@ -82,6 +83,11 @@ func main() {
 		cartRoutes.POST("/buah/:buah/quantity/:quantity", cartHandler.AddCart)
 		cartRoutes.PUT("/:cart", cartHandler.UpdateCart)
 		cartRoutes.DELETE("/:cart", cartHandler.DeleteCart)
+	}
+	checkoutRoutes := apiRoutes.Group("/checkout", middleware.AuthorizeJWT())
+	{
+		checkoutRoutes.GET("/:checkout", checkoutHandler.GetCheckout)
+		checkoutRoutes.POST("/carts/:cartIDs/address/:address", checkoutHandler.AddCheckout)
 	}
 	orderRoutes := apiRoutes.Group("/order", middleware.AuthorizeJWT())
 	{
