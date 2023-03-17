@@ -1,5 +1,6 @@
 package initializer
 
+//initializer
 import (
 	"ProjectBuahIn/models"
 	"os"

@@ -1,5 +1,6 @@
 package initializer
 
+//initializer
 import (
 	"log"
 
