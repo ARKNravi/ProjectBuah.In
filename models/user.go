@@ -7,10 +7,10 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `json:"username" binding:"required"`
+	Username string `json:"username"`
 	Email    string `json:"email" binding:"required,email" gorm:"unique"`
 	Password string `json:"password" binding:"required"`
-	NoTelp   string `json:"notelp" binding:"required"`
+	NoTelp   string `json:"notelp"`
 }
 
 func (User) TableName() string {
