@@ -79,13 +79,12 @@ func (h *buahHandler) UpdateBuah(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	prodStr := ctx.Param("buah")
-	prodID, err := strconv.Atoi(prodStr)
+	id := ctx.Param("buah")
+	intID, err := strconv.Atoi(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
 	}
-	Buah.ID = uint(prodID)
+	Buah.ID = uint(intID)
 	Buah, err = h.repo.UpdateBuah(Buah)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

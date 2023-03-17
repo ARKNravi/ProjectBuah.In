@@ -42,7 +42,7 @@ func main() {
 	{
 		userProtectedRoutes.GET("/", userHandler.GetAllUser)
 		userProtectedRoutes.GET("/:user", userHandler.GetUser)
-		userProtectedRoutes.GET("/:user/buah/:buah/products", userHandler.GetProductOrdered)
+		userProtectedRoutes.GET("/:user/products", userHandler.GetProductOrdered)
 		userProtectedRoutes.PUT("/:user", userHandler.UpdateUser)
 		userProtectedRoutes.DELETE("/:user", userHandler.DeleteUser)
 	}
@@ -67,9 +67,10 @@ func main() {
 
 	cartRoutes := apiRoutes.Group("/cart", middleware.AuthorizeJWT())
 	{
-		cartRoutes.GET("/", cartHandler.GetAllCart)
+		cartRoutes.GET("/:cart", cartHandler.GetCart)
+		cartRoutes.GET("user/:user", cartHandler.GetAllCart)
 		cartRoutes.POST("/buah/:buah/quantity/:quantity", cartHandler.AddCart)
-		cartRoutes.PUT("/buah/:buah", cartHandler.UpdateCart)
+		cartRoutes.PUT("/:cart", cartHandler.UpdateCart)
 		cartRoutes.DELETE("/:cart", cartHandler.DeleteCart)
 	}
 	orderRoutes := apiRoutes.Group("/order", middleware.AuthorizeJWT())
@@ -85,5 +86,4 @@ func main() {
 
 	port := os.Getenv("PORT")
 	r.Run(":" + port)
-
 }

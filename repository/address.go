@@ -37,10 +37,11 @@ func (db *addressRepository) AddAddress(address models.Address) (models.Address,
 }
 
 func (db *addressRepository) UpdateAddress(address models.Address) (models.Address, error) {
-	if err := db.connection.First(&address, address.ID).Error; err != nil {
-		return address, err
+	err := db.connection.Model(&models.User{}).Where("id=?", address.ID).Updates(&address)
+	if err.Error != nil {
+		return models.Address{}, err.Error
 	}
-	return address, db.connection.Model(&address).Updates(&address).Error
+	return address, nil
 }
 
 func (db *addressRepository) DeleteAddress(address models.Address) (models.Address, error) {

@@ -4,6 +4,7 @@ import (
 	"ProjectBuahIn/models"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // UserRepository -> User CRUD
@@ -45,10 +46,11 @@ func (db *userRepository) AddUser(user models.User) (models.User, error) {
 }
 
 func (db *userRepository) UpdateUser(user models.User) (models.User, error) {
-	if err := db.connection.First(&user, user.ID).Error; err != nil {
-		return user, err
+	err := db.connection.Model(&models.User{}).Where("id=?", user.ID).Updates(&user)
+	if err.Error != nil {
+		return models.User{}, err.Error
 	}
-	return user, db.connection.Model(&user).Updates(&user).Error
+	return user, nil
 }
 
 func (db *userRepository) DeleteUser(user models.User) (models.User, error) {
@@ -59,5 +61,5 @@ func (db *userRepository) DeleteUser(user models.User) (models.User, error) {
 }
 
 func (db *userRepository) GetProductOrdered(userID int) (orders []models.Order, err error) {
-	return orders, db.connection.Where("user_id = ?", userID).Set("gorm:auto_preload", true).Find(&orders).Error
+	return orders, db.connection.Preload(clause.Associations).Where("user_id = ?", userID).Find(&orders).Error
 }

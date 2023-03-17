@@ -27,17 +27,6 @@ func NewCartHandler() CartHandler {
 	}
 }
 
-func (h *cartHandler) GetAllCart(ctx *gin.Context) {
-	cart, err := h.repo.GetAllCart()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-
-	}
-	ctx.JSON(http.StatusOK, cart)
-
-}
-
 func (h *cartHandler) GetCart(ctx *gin.Context) {
 	cartStr := ctx.Param("cart")
 	cartID, err := strconv.Atoi(cartStr)
@@ -55,9 +44,23 @@ func (h *cartHandler) GetCart(ctx *gin.Context) {
 
 }
 
+func (h *cartHandler) GetAllCart(ctx *gin.Context) {
+
+	userStr := ctx.Param("user")
+	userID, _ := strconv.Atoi(userStr)
+	if carts, err := h.repo.GetAllCart(userID); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, carts)
+	}
+
+}
+
 func (h *cartHandler) AddCart(ctx *gin.Context) {
-	prodIDStr := ctx.Param("buah")
-	if prodID, err := strconv.Atoi(prodIDStr); err != nil {
+	buahIDStr := ctx.Param("buah")
+	if buahID, err := strconv.Atoi(buahIDStr); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -69,7 +72,7 @@ func (h *cartHandler) AddCart(ctx *gin.Context) {
 			})
 		} else {
 			userID := ctx.GetFloat64("userID")
-			if err := h.repo.AddCart(int(userID), prodID, quantityID); err != nil {
+			if err := h.repo.AddCart(int(userID), buahID, quantityID); err != nil {
 				ctx.JSON(http.StatusBadRequest, gin.H{
 					"error": err.Error(),
 				})
@@ -87,30 +90,21 @@ func (h *cartHandler) UpdateCart(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	cartIDStr := ctx.Param("cart")
-	if cartID, err := strconv.Atoi(cartIDStr); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-	} else {
-		buahIDStr := ctx.Param("buah")
-		if buahID, err := strconv.Atoi(buahIDStr); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-		} else {
-			userID := ctx.GetFloat64("userID")
-			if err := h.repo.UpdateCart(int(userID), buahID, cartID, cart); err != nil {
-				ctx.JSON(http.StatusBadRequest, gin.H{
-					"error": err.Error(),
-				})
-			} else {
-				ctx.String(http.StatusOK, "Product Successfully Updated")
-			}
-			ctx.JSON(http.StatusOK, cart)
-		}
+	id := ctx.Param("cart")
+	intID, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
+	cart.ID = uint(intID)
+	cart, err = h.repo.UpdateCart(cart)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 
+	} else {
+		ctx.String(http.StatusOK, "Product Successfully Updated")
+	}
+	ctx.JSON(http.StatusOK, cart)
 }
 
 func (h *cartHandler) DeleteCart(ctx *gin.Context) {

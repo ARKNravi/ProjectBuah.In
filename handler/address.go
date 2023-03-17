@@ -79,13 +79,12 @@ func (h *addressHandler) UpdateAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	addrStr := ctx.Param("address")
-	addrID, err := strconv.Atoi(addrStr)
+	id := ctx.Param("address")
+	intID, err := strconv.Atoi(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
 	}
-	address.ID = uint(addrID)
+	address.ID = uint(intID)
 	address, err = h.repo.UpdateAddress(address)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

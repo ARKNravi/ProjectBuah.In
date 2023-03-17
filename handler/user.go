@@ -127,14 +127,12 @@ func (h *userHandler) UpdateUser(ctx *gin.Context) {
 	}
 	user.ID = uint(intID)
 	user, err = h.repo.UpdateUser(user)
-	ctx.JSON(http.StatusOK, user)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 
 	}
 	ctx.JSON(http.StatusOK, user)
-
 }
 
 func (h *userHandler) DeleteUser(ctx *gin.Context) {
