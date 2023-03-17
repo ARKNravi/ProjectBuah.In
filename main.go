@@ -27,6 +27,7 @@ func main() {
 	orderHandler := handler.NewOrderHandler()
 	addressHandler := handler.NewAddressHandler()
 	checkoutHandler := handler.NewCheckoutHandler()
+	paymentHandler := handler.NewPaymentHandler()
 
 	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "Welcome to Our Mini Ecommerce")
@@ -42,6 +43,7 @@ func main() {
 
 	userProtectedRoutes := apiRoutes.Group("/users", middleware.AuthorizeJWT())
 	{
+
 		userProtectedRoutes.GET("/", userHandler.GetAllUser)
 		userProtectedRoutes.GET("/:user", userHandler.GetUser)
 		userProtectedRoutes.GET("/:user/products", userHandler.GetProductOrdered)
@@ -94,6 +96,12 @@ func main() {
 	orderRoutes := apiRoutes.Group("/order", middleware.AuthorizeJWT())
 	{
 		orderRoutes.POST("/buah/:buah/quantity/:quantity", orderHandler.OrderProduct)
+	}
+
+	paymentRoutes := apiRoutes.Group("/payment", middleware.AuthorizeJWT())
+	{
+		paymentRoutes.GET("/:payment", paymentHandler.GetPayment)
+		paymentRoutes.POST("/checkout/:checkout", paymentHandler.AddPayment)
 	}
 
 	fileRoutes := r.Group("/file")

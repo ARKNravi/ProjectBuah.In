@@ -15,6 +15,8 @@ type Buah struct {
 	Berat       uint   `json:"berat" binding:"required,number"`
 	Stok        uint   `json:"stok" binding:"required"`
 	Alamatbuah  string `json:"alamatbuah" binding:"required"`
+	Rating      string `json:"rating" binding:"required"`
+	Sold        string `json:"sold" binding:"required"`
 	ImageLink   string `json:"image_link"`
 }
 
