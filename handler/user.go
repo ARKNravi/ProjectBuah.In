@@ -58,13 +58,8 @@ func (h *userHandler) GetAllUser(ctx *gin.Context) {
 }
 
 func (h *userHandler) GetUser(ctx *gin.Context) {
-	id := ctx.Param("user")
-	intID, err := strconv.Atoi(id)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	user, err := h.repo.GetUser(intID)
+	id := ctx.GetFloat64("userID")
+	user, err := h.repo.GetUser(int(id))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
