@@ -80,19 +80,21 @@ func (h *addressHandler) UpdateAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	userID := ctx.GetFloat64("userID")
 	id := ctx.Param("address")
 	intID, err := strconv.Atoi(id)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 	address.ID = uint(intID)
-	address, err = h.repo.UpdateAddress(address)
+	address, err = h.repo.UpdateAddress(address, int(userID))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 
+	} else {
+		ctx.JSON(http.StatusOK, address)
 	}
-	ctx.JSON(http.StatusOK, address)
 
 }
 

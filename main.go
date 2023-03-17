@@ -30,7 +30,7 @@ func main() {
 	paymentHandler := handler.NewPaymentHandler()
 
 	r.GET("/", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "Welcome to Our Mini Ecommerce")
+		ctx.String(http.StatusOK, "Welcome to Buah.In")
 	})
 
 	apiRoutes := r.Group("/api")

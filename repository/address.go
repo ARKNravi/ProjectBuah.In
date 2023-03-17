@@ -12,7 +12,7 @@ type AddressRepository interface {
 	GetAddress(int) (models.Address, error)
 	GetAllAddress(int) ([]models.Address, error)
 	AddAddress(models.Address, int) (models.Address, error)
-	UpdateAddress(models.Address) (models.Address, error)
+	UpdateAddress(models.Address, int) (models.Address, error)
 	DeleteAddress(models.Address) (models.Address, error)
 }
 
@@ -54,8 +54,8 @@ func (db *addressRepository) AddAddress(address models.Address, userID int) (mod
 	return address, nil
 }
 
-func (db *addressRepository) UpdateAddress(address models.Address) (models.Address, error) {
-	err := db.connection.Model(&models.User{}).Where("id=?", address.ID).Updates(&address)
+func (db *addressRepository) UpdateAddress(address models.Address, userID int) (models.Address, error) {
+	err := db.connection.Model(&models.Address{}).Where("id=?", address.ID).Updates(&address)
 	if err.Error != nil {
 		return models.Address{}, err.Error
 	}
