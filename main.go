@@ -87,7 +87,7 @@ func main() {
 	checkoutRoutes := apiRoutes.Group("/checkout", middleware.AuthorizeJWT())
 	{
 		checkoutRoutes.GET("/:checkout", checkoutHandler.GetCheckout)
-		checkoutRoutes.POST("/carts/:cartIDs/address/:address", checkoutHandler.AddCheckout)
+		checkoutRoutes.POST("/carts/:cart/address/:address", checkoutHandler.AddCheckout)
 	}
 	orderRoutes := apiRoutes.Group("/order", middleware.AuthorizeJWT())
 	{

@@ -16,3 +16,7 @@ type Checkout struct {
 	PaymentMethod string `json:"payment_method"`
 	Shipping      string `json:"shipping"`
 }
+
+func (Checkout) TableName() string {
+	return "checkouts"
+}

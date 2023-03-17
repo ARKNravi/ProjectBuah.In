@@ -27,10 +27,10 @@ func (db *checkoutRepository) GetCheckout(id int) (checkout models.Checkout, err
 	return checkout, db.connection.Preload(clause.Associations).First(&checkout, id).Error
 }
 
-func (db *checkoutRepository) AddCheckout(userID int, addressID int, cartID int) (checkout models.Checkout, err error) {
+func (db *checkoutRepository) AddCheckout(userID int, cartID int, addressID int) (checkout models.Checkout, err error) {
 	return checkout, db.connection.Preload(clause.Associations).Create(&models.Checkout{
 		UserID:    uint(userID),
-		AddressID: uint(addressID),
 		CartID:    uint(cartID),
+		AddressID: uint(addressID),
 	}).Error
 }

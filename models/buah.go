@@ -15,6 +15,7 @@ type Buah struct {
 	Berat       uint   `json:"berat" binding:"required,number"`
 	Stok        uint   `json:"stok" binding:"required"`
 	Alamatbuah  string `json:"alamatbuah" binding:"required"`
+	ImageLink   string `json:"image_link"`
 }
 
 func (Buah) TableName() string {

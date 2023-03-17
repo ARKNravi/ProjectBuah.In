@@ -10,7 +10,7 @@ import (
 
 type AddressRepository interface {
 	GetAddress(int) (models.Address, error)
-	GetAllAddress() ([]models.Address, error)
+	GetAllAddress(int) ([]models.Address, error)
 	AddAddress(models.Address, int) (models.Address, error)
 	UpdateAddress(models.Address) (models.Address, error)
 	DeleteAddress(models.Address) (models.Address, error)
@@ -27,15 +27,14 @@ func NewAddressRepository() AddressRepository {
 }
 
 func (db *addressRepository) GetAddress(id int) (address models.Address, err error) {
-	return address, db.connection.First(&address, id).Error
+	return address, db.connection.Preload(clause.Associations).First(&address, id).Error
 }
 
-func (db *addressRepository) GetAllAddress() (addresss []models.Address, err error) {
-	return addresss, db.connection.Find(&addresss).Error
+func (db *addressRepository) GetAllAddress(userID int) (addresss []models.Address, err error) {
+	return addresss, db.connection.Preload(clause.Associations).Where("user_id = ?", userID).Find(&addresss).Error
 }
 
 func (db *addressRepository) AddAddress(address models.Address, userID int) (models.Address, error) {
-	// Check if user with userID exists
 	var user models.User
 	if err := db.connection.First(&user, userID).Error; err != nil {
 		return models.Address{}, err
@@ -45,8 +44,10 @@ func (db *addressRepository) AddAddress(address models.Address, userID int) (mod
 	address.UserID = uint(userID)
 
 	// Save the address to the database
-	if err := db.connection.Preload(clause.Associations).Where("user_id = ?", userID).Create(&address).Error; err != nil {
-		return models.Address{}, err
+	if err := db.connection.Preload(clause.Associations).Create(&address).Error; err != nil {
+		return models.Address{
+			UserID: uint(userID),
+		}, err
 	}
 
 	return address, nil

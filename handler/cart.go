@@ -73,12 +73,12 @@ func (h *cartHandler) AddCart(ctx *gin.Context) {
 			})
 		} else {
 			userID := ctx.GetFloat64("userID")
-			if err := h.repo.AddCart(int(userID), buahID, quantityID); err != nil {
+			if cart, err := h.repo.AddCart(int(userID), buahID, quantityID); err != nil {
 				ctx.JSON(http.StatusBadRequest, gin.H{
 					"error": err.Error(),
 				})
 			} else {
-				ctx.String(http.StatusOK, "Product Successfully added to cart")
+				ctx.JSON(http.StatusOK, cart)
 			}
 		}
 	}

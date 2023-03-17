@@ -1,11 +1,9 @@
 package handler
 
 import (
-	"ProjectBuahIn/models"
 	"ProjectBuahIn/repository"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,40 +36,31 @@ func (h *checkoutHandler) GetCheckout(ctx *gin.Context) {
 		return
 
 	}
-	ctx.String(http.StatusOK, "Here is your checkout")
 	ctx.JSON(http.StatusOK, checkout)
 
 }
 
 func (h *checkoutHandler) AddCheckout(ctx *gin.Context) {
-	addrIDStr := ctx.Param("address")
-	if addrID, err := strconv.Atoi(addrIDStr); err != nil {
+	cartIDStr := ctx.Param("cart")
+	if cartID, err := strconv.Atoi(cartIDStr); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 	} else {
-		cartIDsStr := ctx.Param("cartIDs")
-		cartIDs := strings.Split(cartIDsStr, ",")
-		checkouts := []models.Checkout{}
-		for _, cartIDStr := range cartIDs {
-			cartID, err := strconv.Atoi(cartIDStr)
-			if err != nil {
-				ctx.JSON(http.StatusBadRequest, gin.H{
-					"error": err.Error(),
-				})
-				return
-			}
+		addrIDStr := ctx.Param("address")
+		if addrID, err := strconv.Atoi(addrIDStr); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+		} else {
 			userID := ctx.GetFloat64("userID")
-			checkout, err := h.repo.AddCheckout(int(userID), addrID, cartID)
-			if err != nil {
+			if checkout, err := h.repo.AddCheckout(int(userID), cartID, addrID); err != nil {
 				ctx.JSON(http.StatusBadRequest, gin.H{
 					"error": err.Error(),
 				})
-				return
+			} else {
+				ctx.JSON(http.StatusOK, checkout)
 			}
-			checkouts = append(checkouts, checkout)
 		}
-		ctx.String(http.StatusOK, "Welcome to the checkout")
-		ctx.JSON(http.StatusOK, checkouts)
 	}
 }

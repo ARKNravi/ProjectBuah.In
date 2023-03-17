@@ -4,7 +4,6 @@ package handler
 import (
 	"ProjectBuahIn/models"
 	"ProjectBuahIn/repository"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -31,13 +30,13 @@ func NewAddressHandler() AddressHandler {
 }
 
 func (h *addressHandler) GetAddress(ctx *gin.Context) {
-	id := ctx.Param("address")
-	intID, err := strconv.Atoi(id)
+	addrStr := ctx.Param("address")
+	addrID, err := strconv.Atoi(addrStr)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	address, err := h.repo.GetAddress(intID)
+	address, err := h.repo.GetAddress(addrID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -47,14 +46,14 @@ func (h *addressHandler) GetAddress(ctx *gin.Context) {
 }
 
 func (h *addressHandler) GetAllAddress(ctx *gin.Context) {
-	fmt.Println(ctx.Get("addressID"))
-	address, err := h.repo.GetAllAddress()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-
+	userID := ctx.GetFloat64("userID")
+	if carts, err := h.repo.GetAllAddress(int(userID)); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		ctx.JSON(http.StatusOK, carts)
 	}
-	ctx.JSON(http.StatusOK, address)
 
 }
 
@@ -64,6 +63,7 @@ func (h *addressHandler) AddAddress(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	userID := ctx.GetFloat64("userID")
 	if address, err := h.repo.AddAddress(address, int(userID)); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
