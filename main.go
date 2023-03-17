@@ -61,9 +61,18 @@ func main() {
 	{
 		productRoutes.GET("/", buahHandler.GetAllBuah)
 		productRoutes.GET("/:buah", buahHandler.GetBuah)
+		productRoutes.GET("/kondisi/:kondisi", buahHandler.GetBuahByKondisi)
+		productRoutes.GET("/pricedesc", buahHandler.GetBuahByPriceDescending)
+		productRoutes.GET("/priceasc", buahHandler.GetBuahByPriceAscending)
 		productRoutes.POST("/", buahHandler.AddBuah)
 		productRoutes.PUT("/:buah", buahHandler.UpdateBuah)
 		productRoutes.DELETE("/:buah", buahHandler.DeleteBuah)
+	}
+	AnonproductRoutes := apiRoutes.Group("/buah")
+	{
+		AnonproductRoutes.GET("/", buahHandler.GetAllBuah)
+		AnonproductRoutes.GET("/:buah", buahHandler.GetBuah)
+		AnonproductRoutes.GET("kondisi/:kondisi", buahHandler.GetBuahByKondisi)
 	}
 
 	cartRoutes := apiRoutes.Group("/cart", middleware.AuthorizeJWT())

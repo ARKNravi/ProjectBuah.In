@@ -13,6 +13,9 @@ type BuahRepository interface {
 	AddBuah(models.Buah) (models.Buah, error)
 	UpdateBuah(models.Buah) (models.Buah, error)
 	DeleteBuah(models.Buah) (models.Buah, error)
+	GetBuahByKondisi(string) ([]models.Buah, error)
+	GetBuahByPriceDescending() ([]models.Buah, error)
+	GetBuahByPriceAscending() ([]models.Buah, error)
 }
 
 type buahRepository struct {
@@ -50,4 +53,31 @@ func (db *buahRepository) DeleteBuah(Buah models.Buah) (models.Buah, error) {
 		return Buah, err
 	}
 	return Buah, db.connection.Delete(&Buah).Error
+}
+
+func (db *buahRepository) GetBuahByKondisi(kondisi string) ([]models.Buah, error) {
+	var buahs []models.Buah
+	err := db.connection.Where("kondisi = ?", kondisi).Find(&buahs).Error
+	if err != nil {
+		return nil, err
+	}
+	return buahs, nil
+}
+
+func (db *buahRepository) GetBuahByPriceDescending() ([]models.Buah, error) {
+	var buahs []models.Buah
+	err := db.connection.Order("price desc").Find(&buahs).Error
+	if err != nil {
+		return nil, err
+	}
+	return buahs, nil
+}
+
+func (db *buahRepository) GetBuahByPriceAscending() ([]models.Buah, error) {
+	var buahs []models.Buah
+	err := db.connection.Order("price asc").Find(&buahs).Error
+	if err != nil {
+		return nil, err
+	}
+	return buahs, nil
 }

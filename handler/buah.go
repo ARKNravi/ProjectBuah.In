@@ -17,6 +17,9 @@ type BuahHandler interface {
 	AddBuah(*gin.Context)
 	UpdateBuah(*gin.Context)
 	DeleteBuah(*gin.Context)
+	GetBuahByKondisi(*gin.Context)
+	GetBuahByPriceDescending(*gin.Context)
+	GetBuahByPriceAscending(*gin.Context)
 }
 
 type buahHandler struct {
@@ -109,4 +112,32 @@ func (h *buahHandler) DeleteBuah(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, Buah)
 
+}
+
+func (h *buahHandler) GetBuahByKondisi(ctx *gin.Context) {
+	kondisi := ctx.Param("kondisi")
+	buahs, err := h.repo.GetBuahByKondisi(kondisi)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, buahs)
+}
+
+func (h *buahHandler) GetBuahByPriceDescending(ctx *gin.Context) {
+	buahs, err := h.repo.GetBuahByPriceDescending()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, buahs)
+}
+
+func (h *buahHandler) GetBuahByPriceAscending(ctx *gin.Context) {
+	buahs, err := h.repo.GetBuahByPriceAscending()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, buahs)
 }
