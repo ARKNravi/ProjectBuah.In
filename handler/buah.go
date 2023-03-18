@@ -20,7 +20,6 @@ type BuahHandler interface {
 	GetBuahByKondisi(*gin.Context)
 	GetBuahByPriceDescending(*gin.Context)
 	GetBuahByPriceAscending(*gin.Context)
-	SeedData(*gin.Context)
 }
 
 type buahHandler struct {
@@ -141,18 +140,4 @@ func (h *buahHandler) GetBuahByPriceAscending(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, buahs)
-}
-
-func (h *buahHandler) SeedData(ctx *gin.Context) {
-	var Buah models.Buah
-	if err := ctx.ShouldBindJSON(&Buah); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	err := h.repo.SeedData()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	ctx.JSON(http.StatusOK, Buah)
 }

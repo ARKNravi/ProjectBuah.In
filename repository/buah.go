@@ -16,7 +16,6 @@ type BuahRepository interface {
 	GetBuahByKondisi(string) ([]models.Buah, error)
 	GetBuahByPriceDescending() ([]models.Buah, error)
 	GetBuahByPriceAscending() ([]models.Buah, error)
-	SeedData() error
 }
 
 type buahRepository struct {
@@ -81,18 +80,4 @@ func (db *buahRepository) GetBuahByPriceAscending() ([]models.Buah, error) {
 		return nil, err
 	}
 	return buahs, nil
-}
-
-func (db *buahRepository) SeedData() error {
-	buahs := []models.Buah{
-		{Nama: "Apel", Kondisi: "Segar", Description: "Buah apel yang segar dan enak", Price: 5000, Discount: 10, Berat: 100, Stok: 50, Alamatbuah: "Jalan Apel No. 1", ImageLink: "https://example.com/apel.jpg"},
-		{Nama: "Mangga", Kondisi: "Matang", Description: "Buah mangga yang matang dan manis", Price: 10000, Discount: 0, Berat: 200, Stok: 30, Alamatbuah: "Jalan Mangga No. 2", ImageLink: "https://example.com/mangga.jpg"},
-		{Nama: "Jeruk", Kondisi: "Kecut", Description: "Buah jeruk yang kecut dan segar", Price: 7500, Discount: 5, Berat: 150, Stok: 20, Alamatbuah: "Jalan Jeruk No. 3", ImageLink: "https://example.com/jeruk.jpg"},
-	}
-	for _, buah := range buahs {
-		if err := db.connection.Create(&buah).Error; err != nil {
-			return err
-		}
-	}
-	return nil
 }
